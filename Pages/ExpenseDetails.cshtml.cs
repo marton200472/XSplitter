@@ -14,6 +14,9 @@ public class ExpenseDetailsModel : PageModel
 
     public User[] Users { get; set; }
 
+    [BindProperty]
+    public Owing[] Owings { get; set; }
+
     public async Task<IActionResult> OnGetAsync(int id) {
         using var dbConnection = new DbConnection();
         Users = (await dbConnection.GetUsersAsync()).ToArray();
@@ -24,9 +27,14 @@ public class ExpenseDetailsModel : PageModel
         return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync() {
+    public async Task<IActionResult> OnPostAsync(int id) {
         using var dbConnection = new DbConnection();
-        await dbConnection.AddExpense(Expense);
+        var expense = await dbConnection.GetExpenseAsync(id);
+        foreach (var item in Owings)
+        {
+            item.ExpenseId = id;
+        }
+        await dbConnection.AddOwings(Owings.Where(x=>x.UserId != expense!.UserId && x.Amount != 0));
         return RedirectToPage(nameof(Index));
     }
 }

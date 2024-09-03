@@ -8,10 +8,11 @@
 
 <label>Eloszlás:</label>
 <form method="post">
-    @foreach(var u in Model.Users) {
+    @for(int i = 0; i < Model.Users.Length; i++) {
         <div>
-            <label>@u.Name:</label>
-            <input class="share" id="@u.Id" onfocus="this.oldvalue = this.value;" onchange="updateShares(this);this.oldvalue = this.value;" type="number" min="0" step="1" value="@(Model.Expense.UserId == u.Id ? Model.Expense.Amount-(Model.Users.Length-1)*split :split)"/>
+            <label>@Model.Users[i].Name:</label>
+            <input type="hidden" name="Owings[@i].UserId" id="Owings[@i].UserId" value="@Model.Users[i].Id"/>
+            <input class="share" name="Owings[@i].Amount" id="@Model.Users[i].Id" onfocus="this.oldvalue = this.value;" onchange="updateShares(this);this.oldvalue = this.value;" type="number" min="0" step="1" value="@(Model.Expense.UserId == Model.Users[i].Id ? Model.Expense.Amount-(Model.Users.Length-1)*split :split)"/>
         </div>
     }
     <button type="submit">Mentés</button>
@@ -37,7 +38,7 @@
             }
         }
         else {
-            fieldsToUpdate.push(updated[0]);
+            fieldsToUpdate.push(document.getElementById(updated[0]));
         }
 
         console.log(fieldsToUpdate);

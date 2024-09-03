@@ -4,8 +4,17 @@
     ViewData["Title"] = "Főoldal";
 }
 
-@foreach(var e in Model.Expenses) {
-    <p>@e.Description - @e.Amount (@e.UserId)</p>
-}
+<h1>Hello</h1>
+<a class="btn btn-primary" asp-page="AddExpense">Új kiadás</a>
 
-<a asp-page="AddExpense">Új kiadás</a>
+<h3>Tartozások</h3>
+@foreach(var u in Model.Owings) {
+    <p>
+        @u.Key.Name
+        <ul>
+            @foreach(var o in u.Value) {
+                <li>@o.User.Name: @o.Amount Ft (@o.Expenses) <a class="btn btn-primary" href="/ClearOwing/@u.Key.Id/@o.User.Id">Kiegyenlítés</a></li>
+            }
+        </ul>
+    </p>
+}

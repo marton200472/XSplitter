@@ -11,6 +11,8 @@ public class IndexModel : PageModel
 
     public Expense[] Expenses { get; set; }
 
+    public Dictionary<User,List<OwingToUser>> Owings { get; set; } = new();
+
     public IndexModel(ILogger<IndexModel> logger)
     {
         _logger = logger;
@@ -20,5 +22,11 @@ public class IndexModel : PageModel
     public async Task OnGetAsync()
     {
         Expenses = (await _dbConnection.GetExpensesAsync()).ToArray();
+        var users = await _dbConnection.GetUsersAsync();
+        foreach (var u in users)
+        {
+            var owings = (await _dbConnection.GetOwingsForUser(u.Id)).ToList();
+            Owings.Add(u, owings);
+        }
     }   
 }
