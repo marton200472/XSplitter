@@ -1,0 +1,11 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Főoldal";
+}
+
+@foreach(var e in Model.Expenses) {
+    <p>@e.Description - @e.Amount (@e.UserId)</p>
+}
+
+<a asp-page="AddExpense">Új kiadás</a>

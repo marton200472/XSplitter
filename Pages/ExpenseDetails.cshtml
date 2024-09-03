@@ -1,0 +1,85 @@
+@page "{id:int}"
+@model ExpenseDetailsModel
+@{
+    var split = Model.Expense.Amount / Model.Users.Length;
+}
+
+<p>@Model.Expense.Amount</p>
+
+<label>Eloszlás:</label>
+<form method="post">
+    @foreach(var u in Model.Users) {
+        <div>
+            <label>@u.Name:</label>
+            <input class="share" id="@u.Id" onfocus="this.oldvalue = this.value;" onchange="updateShares(this);this.oldvalue = this.value;" type="number" min="0" step="1" value="@(Model.Expense.UserId == u.Id ? Model.Expense.Amount-(Model.Users.Length-1)*split :split)"/>
+        </div>
+    }
+    <button type="submit">Mentés</button>
+</form>
+
+@section Scripts {
+<script>
+    const ownerId = @Model.Expense.UserId;
+    const total = @Model.Expense.Amount;
+    const fields = document.getElementsByClassName("share");
+
+    var updated = [];
+
+    function updateShares(source) {
+        remove(updated,source.id);
+        updated.push(source.id);
+        
+        var fieldsToUpdate = [];
+        if(updated.length != fields.length)
+        for(let i = 0; i < fields.length; i++) {
+            if(!contains(updated,fields[i].id)) {
+                fieldsToUpdate.push(fields[i]);
+            }
+        }
+        else {
+            fieldsToUpdate.push(updated[0]);
+        }
+
+        console.log(fieldsToUpdate);
+        
+        let change = source.value - source.oldvalue;
+        const sval = sumVal(fieldsToUpdate);
+        if(change > sval) {
+            change = sval;
+            source.value = source.oldvalue - 0 + change;
+        }
+        
+        let share = ~~((sval - change) / fieldsToUpdate.length);
+        for(let i = 0; i < fieldsToUpdate.length; i++) {
+            if(i == 0) {
+                fieldsToUpdate[i].value = share + (sval-change)-fieldsToUpdate.length*share;
+            }
+            else {
+                fieldsToUpdate[i].value = share;
+            }
+        }
+    }
+
+    function sumVal(arr) {
+        var sum = 0;
+        for(let i = 0; i < arr.length; i++) {
+            sum = sum + (arr[i].value - 0);
+        }
+        return sum;
+    }
+
+    function remove(arr, item) {
+        const index = arr.indexOf(item);
+        if (index > -1) { 
+            arr.splice(index, 1);
+        }
+    }
+
+    function contains(arr, item) {
+        for(let i = 0; i < arr.length; i++) {
+            if(item == arr[i]) return true;
+        }
+        return false;
+    }
+</script>
+}

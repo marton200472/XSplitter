@@ -1,0 +1,19 @@
+@page
+@model AddExpenseModel
+
+<form method="post">
+    <div>
+        <label>Megnevezés:</label>
+        @Html.TextBoxFor(x=>x.Expense.Description)
+        <label>Ár:</label>
+        <input type="number" step="1" min="1" name="@Html.NameFor(x=>x.Expense.Amount)" /> Ft
+        <label>Fizette:</label>
+        <select name="@Html.NameFor(x=>x.Expense.UserId)">
+            @foreach(var u in Model.Users) {
+                <option value="@u.Id">@u.Name</option>
+            }
+        </select>
+    </div>
+    <button type="submit">Küldés</button>
+
+</form>
