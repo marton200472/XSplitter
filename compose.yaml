@@ -4,10 +4,10 @@ services:
       context: .
       target: final
     ports:
-      - 12345:12345
+      - 8085:8080
     restart: always
     volumes:
-      - storage:/app
+      - storage:/app/data
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
 volumes:

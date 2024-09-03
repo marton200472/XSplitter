@@ -6,7 +6,7 @@ public class DbConnection : IDisposable
 {
     SqliteConnection _connection;
     public DbConnection() {
-        _connection = new("Data Source=XSplitter.db");
+        _connection = new("Data Source=data/XSplitter.db");
         _connection.Open();
     }
 

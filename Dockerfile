@@ -47,7 +47,8 @@ WORKDIR /app
 RUN apk add --no-cache icu-libs
 # Copy everything needed to run the app from the "build" stage.
 COPY --from=build /app .
-COPY XSplitter.db .
+RUN mkdir data
+COPY data/XSplitter.db ./data
 
 # Switch to a non-privileged user (defined in the base image) that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/
